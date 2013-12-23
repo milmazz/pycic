@@ -13,11 +13,11 @@ pycic: Python client for CIC_
 Feature support
 +++++++++++++++
 
- - Support multiple accounts.
- - Retrieve all the available Groups, Categories and Reports.
- - Limit the number of reports to retrieve, also, you can filter for category or dates.
- - Create new reports.
- - Support for proxies. You can find more details in the :ref:`examples` section.
+ - Supports multiple accounts.
+ - Retrieves all the available Groups, Categories and Reports.
+ - Limits the number of reports to retrieve, also, you can filter for category or dates.
+ - Creates new reports.
+ - Supports for proxies. You can find more details in the :ref:`examples` section.
 
 API Documentation
 +++++++++++++++++
