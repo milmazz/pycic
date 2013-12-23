@@ -1,28 +1,29 @@
-pycic: Python client for CIC_ (Centro de Integración Ciudadana)
-==============================================================
+pycic: Python client for CIC_
+=============================
 
-`pycic` is an MIT Licensed client, written in Python, that lets you interact with the CIC_ API. Hope that you enjoy it.
+``pycic`` is an MIT Licensed client, written in Python, that lets you interact with the CIC_ (Centro de Integración Ciudadana) API. Hope that you enjoy it.
 
-`pycic` currently works with the `nl` (Nuevo León) and `sal` (Saltillo) accounts. Nuevo León is the default option,
-but you can quickly change that behavior at the moment of the instance creation, for example: `Report(account="sal")`
+``pycic`` currently works with the ``nl`` (`Nuevo León`_) and ``sal`` (Saltillo_) accounts. *Nuevo León* is the default option,
+but you can quickly change that behavior at the moment of the instance creation, for example: ``Report(account="sal")``
 
-Right now you can get groups, categories and reports with `pycic`. Also, you can create new reports, let's show you a bit this features:
+Right now you can get *groups*, *categories* and *reports* with ``pycic``. Also, you can create new reports, let's show you a bit this features:
 
 Reports
 +++++++
 
 Get all the available reports
 
-..code-block pycon
+.. code-block:: pycon
 
 	$ python -i -m pycic.report
 	>>> r = Report()
 	>>> r.get()
 	{u'reports': [{u'votes': 0, u'group': u'Vialidad y Transito (SS)', u'created_at': u'2013-12-22T18:09:45-06:00', u'updated_at': u'2013-12-22T18:15:49-06:00', u'address_detail': {u'county': {u'long_name': u'Monterrey', u'short_name': u'Monterrey'}, u'neighborhood': {u'long_name': u'Contry Tesoro', u'short_name': u'Contry Tesoro'}, u'state': {u'long_name': u'Nuevo Le\xf3n', u'short_name': u'NL'}, u'formatted_address': u'Avenida Alfonso Reyes, Contry Tesoro, 64850 Monterrey, NL, M\xe9xico', u'zipcode': u'64850'}, u'content': u'*ACCIDENTE* En Alfonso Reyes y Las Musas. MTY #mtyfollow 17:59 via @custodesmty', u'state': u'closed', u'stars': 0.0, u'lat': u'25.64334232435947', u'is_public': True, u'ticket': u'#8DVO', u'lng': u'-100.27700725360774', u'categories': [u'ACCIDENTE']}, {u'votes': 0, u'group': u'Vialidad y Transito (SS)', u'created_at': u'2013-12-22T18:04:38-06:00', u'updated_at': u'2013-12-22T18:23:09-06:00', u'address_detail': {u'county': {u'long_name': u'Monterrey', u'short_name': u'Monterrey'}, u'neighborhood': {u'long_name': u'Centro', u'short_name': u'Centro'}, u'state': {u'long_name': u'Nuevo Le\xf3n', u'short_name': u'NL'}, u'formatted_address': u'Allende-Santiago, Villa de Santiago, NL, M\xe9xico', u'zipcode': u'64000'}, u'content': u'*ACCIDENTE* En Carr Nacional Allende altura de la entrada a San Antonino. ALL-12.22@17:52', u'state': u'closed', u'stars': 0.0, u'lat': u'25.3111465042625', u'is_public': True, u'ticket': u'#8DVN', u'lng': u'-100.04316288395785', u'categories': [u'ACCIDENTE']}, ...]}
 
-But also you can limit the number of results, filter categories or dates.
+But also you can ``limit`` the number of results, filter for categories or dates.
 
-..code-block:: pycon
+.. code-block:: pycon
+
 	$ python -i -m pycic.report
 	>>> from datetime import datetime
 	>>> now = datetime.now()
@@ -32,9 +33,10 @@ But also you can limit the number of results, filter categories or dates.
 	{u'reports': [{u'votes': 0, u'group': u'Vialidad y Transito (SS)', u'created_at': u'2013-12-21T16:54:48-06:00', u'updated_at': u'2013-12-21T16:55:58-06:00', u'address_detail': {u'county': {u'long_name': u'Escobedo', u'short_name': u'Escobedo'}, u'neighborhood': {u'long_name': u'Hacienda del Canad\xe1', u'short_name': u'Hacienda del Canad\xe1'}, u'state': {u'long_name': u'Nuevo Le\xf3n', u'short_name': u'NL'}, u'formatted_address': u'Avenida Benito Ju\xe1rez 101, Hacienda del Canad\xe1, 66054 Escobedo, NL, M\xe9xico', u'zipcode': u'66054'}, u'content': u'*ACCIDENTE* En Av. Juarez una cuadra antes de Carr Colombia, ambos sentidos afectados. ESC #mtyfollow 16:52 via @drreynosa', u'state': u'closed', u'stars': 0.0, u'lat': u'25.78169151071929', u'is_public': True, u'ticket': u'#8DTM', u'lng': u'-100.29198115691543', u'categories': [u'ACCIDENTE']},...]}
 
 
-If you want to create a new report, it's easy, the only required attributes are `content` and `category`, but you are free to insert `title`, `first_name`, `last_name`, `return_path`, `lat`, `lng` and `video_url`.
+If you want to create a new report, it's easy, the only required attributes are ``content`` and ``category``, but you are free to insert ``title``, ``first_name``, ``last_name``, ``return_path``, ``lat``, ``lng`` and ``video_url``.
 
-..code-block:: pycon
+.. code-block:: pycon
+
 	$ python -i -m pycic.report 
 	>>> r = Report()
 	>>> r.save(title="API Demo", content="API Demo", category="ACCIDENTE")
@@ -46,7 +48,8 @@ Groups
 
 You can get all the available groups
 
-..code-block:: pycon
+.. code-block:: pycon
+
 	$ python -i -m pycic.group
 	>>> g = Group()
 	>>> g.get()
@@ -58,10 +61,13 @@ Categories
 
 You can get all the available categories
 
-..code-block:: pycon
+.. code-block:: pycon
+
 	$ python -i -m pycic.category
 	>>> c = Category()
 	>>> c.get()
 	{u'categories': [{u'group': [u'Vialidad y Transito (SS)'], u'metadata': False, u'type': u'blackbox', u'id': 407, u'name': u'ACCIDENTE'}, {u'group': [u'Servicios Publicos (CS)', u'CIAC SP', u'CIAC MTY', u'CIAC GPE', u'CIAC SN', u'CIAC SC', u'CIAC APO', u'CIAC GAR', u'CIAC ESC', u'CIAC JUA', u'CIAC STG', u'CIAC CAD', u'SADM Mty'], u'metadata': False, u'type': u'blackbox', u'id': 1573, u'name': u'ALCANTARILLAS'}, {u'group': [u'Servicios Publicos (CS)', u'CIAC SP', u'CIAC MTY', u'CIAC GPE', u'CIAC SN', u'CIAC SC', u'CIAC APO', u'CIAC GAR', u'CIAC ESC', u'CIAC JUA', u'CIAC STG', u'CIAC CAD'], u'metadata': False, u'type': u'blackbox', u'id': 416, u'name': u'ALUMBRADO PUBLICO'}, {u'group': [u'Seguridad', u'SEG MTY'], u'metadata': False, u'type': u'blackbox', u'id': 417, u'name': u'AUTO ABANDONADO'}, {u'group': [u'Comunidad'], u'metadata': False, u'type': u'blackbox', u'id': 420, u'name': u'AVISOS'}, {u'group': [u'Servicios Publicos (CS)', u'CIAC SP', u'CIAC MTY', u'CIAC GPE', u'CIAC SN', u'CIAC SC', u'CIAC APO', u'CIAC GAR', u'CIAC ESC', u'CIAC JUA', u'CIAC STG', u'CIAC CAD'], u'metadata': False, u'type': u'blackbox', u'id': 412, u'name': u'BACHE O VIA DA\xd1ADA'}, {u'group': [u'Seguridad', u'SEG MTY'], u'metadata': False, u'type': u'blackbox', u'id': 1575, u'name': u'DETENCION DE BANDAS'}, {u'group': [u'Emergencias'], u'metadata': False, u'type': u'blackbox', u'id': 409, u'name': u'EMERGENCIAS'}, {u'group': [u'Comunidad'], u'metadata': False, u'type': u'blackbox', u'id': 415, u'name': u'EVENTO PUBLICO'}, {u'group': [u'Seguridad', u'SEG MTY'], u'metadata': False, u'type': u'blackbox', u'id': 461, u'name': u'EXTORSION'}, {u'group': [u'Servicios Publicos (CS)', u'CIAC SP', u'CIAC MTY', u'CIAC GPE', u'CIAC SN', u'CIAC SC', u'CIAC APO', u'CIAC GAR', u'CIAC ESC', u'CIAC JUA', u'CIAC STG', u'CIAC CAD', u'CFE Golfo Norte'], u'metadata': False, u'type': u'blackbox', u'id': 423, u'name': u'FALTA ELECTRICIDAD'}, {u'group': [u'Servicios Publicos (CS)', u'CIAC SP', u'CIAC MTY', u'CIAC GPE', u'CIAC SN', u'CIAC SC', u'CIAC APO', u'CIAC GAR', u'CIAC ESC', u'CIAC JUA', u'CIAC STG', u'CIAC CAD', u'SADM Mty'], u'metadata': False, u'type': u'blackbox', u'id': 414, u'name': u'FUGA'}, {u'group': [u'Seguridad', u'SEG MTY'], u'metadata': False, u'type': u'blackbox', u'id': 1574, u'name': u'HOMICIDIO'}, {u'group': [u'Seguridad', u'SEG MTY'], u'metadata': False, u'type': u'blackbox', u'id': 408, u'name': u'INCENDIO'}, {u'group': [u'Comunidad'], u'metadata': False, u'type': u'blackbox', u'id': 1614, u'name': u'MTYMUYBIEN'}, {u'group': [u'Vialidad y Transito (SS)'], u'metadata': False, u'type': u'blackbox', u'id': 413, u'name': u'OBRAS Y/O VIA CERRADA'}, {u'group': [u'Comunidad'], u'metadata': False, u'type': u'blackbox', u'id': 1578, u'name': u'OBSERVADOR CIUDADANO'}, {u'group': [], u'metadata': False, u'type': u'blackbox', u'id': 424, u'name': u'OTROS'}, {u'group': [u'Servicios Publicos (CS)', u'CIAC SP', u'CIAC MTY', u'CIAC GPE', u'CIAC SN', u'CIAC SC', u'CIAC APO', u'CIAC GAR', u'CIAC ESC', u'CIAC JUA', u'CIAC STG', u'CIAC CAD'], u'metadata': False, u'type': u'blackbox', u'id': 421, u'name': u'PARQUES DESCUIDADOS'}, {u'group': [u'Seguridad', u'SEG MTY'], u'metadata': False, u'type': u'blackbox', u'id': 1613, u'name': u'PERCEPCION DE INSEGURIDAD'}, {u'group': [u'Propuestas Ciudadanas (CS)'], u'metadata': False, u'type': u'blackbox', u'id': 1101, u'name': u'PROPUESTA COMUNIDAD'}, {u'group': [u'Propuestas Ciudadanas (CS)'], u'metadata': False, u'type': u'blackbox', u'id': 1102, u'name': u'PROPUESTA SEGURIDAD'}, {u'group': [u'Propuestas Ciudadanas (CS)'], u'metadata': False, u'type': u'blackbox', u'id': 1104, u'name': u'PROPUESTA SERV PUBLICOS'}, {u'group': [u'Propuestas Ciudadanas (CS)'], u'metadata': False, u'type': u'blackbox', u'id': 1103, u'name': u'PROPUESTA VIALIDAD'}, {u'group': [u'Servicios Publicos (CS)', u'CIAC SP', u'CIAC MTY', u'CIAC GPE', u'CIAC SN', u'CIAC SC', u'CIAC APO', u'CIAC GAR', u'CIAC ESC', u'CIAC JUA', u'CIAC STG', u'CIAC CAD'], u'metadata': False, u'type': u'blackbox', u'id': 1572, u'name': u'RECOLECCION DE BASURA'}, {u'group': [u'Seguridad', u'SEG MTY'], u'metadata': False, u'type': u'blackbox', u'id': 410, u'name': u'ROBO'}, {u'group': [u'Seguridad', u'SEG MTY'], u'metadata': False, u'type': u'blackbox', u'id': 422, u'name': u'SECUESTRO'}, {u'group': [u'Servicios Publicos (CS)', u'CIAC SP', u'CIAC MTY', u'CIAC GPE', u'CIAC SN', u'CIAC SC', u'CIAC APO', u'CIAC GAR', u'CIAC ESC', u'CIAC JUA', u'CIAC STG', u'CIAC CAD'], u'metadata': False, u'type': u'blackbox', u'id': 411, u'name': u'SEMAFORO DESCOMPUESTO'}, {u'group': [u'Seguridad', u'SEG MTY'], u'metadata': False, u'type': u'blackbox', u'id': 418, u'name': u'SITUACION DE RIESGO'}, {u'group': [u'Seguridad', u'SEG MTY'], u'metadata': False, u'type': u'blackbox', u'id': 419, u'name': u'SOSPECHOSO'}, {u'group': [u'Vialidad y Transito (SS)'], u'metadata': False, u'type': u'blackbox', u'id': 494, u'name': u'VIALIDAD'}]}
 
 .. _CIC: http://cic.mx/
+.. _`Nuevo León`: http://nl.gob.mx/
+.. _Saltillo: http://www.saltillo.gob.mx/
