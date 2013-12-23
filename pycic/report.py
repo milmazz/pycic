@@ -9,8 +9,9 @@ from .exceptions import InvalidCategory
 
 
 class Report(BaseMethod):
-    def __init__(self, base_url="http://api.cic.mx", version=0, account="nl"):
-        BaseMethod.__init__(self, base_url, version, account)
+    def __init__(self, base_url="http://api.cic.mx", version=0,
+                 account="nl", proxies=None):
+        BaseMethod.__init__(self, base_url, version, account, proxies)
         self.method = "reports"
 
     def _get_field_from_categories(self, field=None):
@@ -72,7 +73,7 @@ class Report(BaseMethod):
         payload = {"limit": limit, "for_category": for_category,
                    "until": date_filter}
 
-        r = requests.get(api_url, params=payload)
+        r = requests.get(api_url, params=payload, proxies=self.proxies)
 
         if r.status_code == requests.codes.ok:
             return r.json()
@@ -123,10 +124,11 @@ class Report(BaseMethod):
             raise TypeError
 
         if payload.get('video_url'):
-            video_uri_response = requests.head(payload['video_url'])
+            video_uri_response = requests.head(payload['video_url'],
+                                               proxies=self.proxies)
             video_uri_response.raise_for_status()
 
-        r = requests.post(api_url, params=payload)
+        r = requests.post(api_url, params=payload, proxies=self.proxies)
 
         r.raise_for_status()
 
