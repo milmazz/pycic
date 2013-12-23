@@ -1,8 +1,5 @@
-"""Client API for CIC (Centro Integracion Ciudadana) in Mexico.
+"""Client API for CIC (Centro Integracion Ciudadana) in Mexico."""
 
-.. author:: Milton Mazzarri <milmazz@gmail.com>
-
-"""
 import requests
 from datetime import datetime
 
@@ -43,11 +40,9 @@ class Report(BaseMethod):
 
         :param limit: The total reports to get
         :type limit: int or None
-        :param for_category: The ID of the category to filter. You can get
-                             valid IDs from `_get_field_from_categories`
-                             method
+        :param for_category: The ID of the category to filter.
         :type for_category: int or None
-        :param until: Show previous reports to the date written in YYYY-MM-DD
+        :param until: Show previous reports to the date indicated
         :type until: datetime or None
         :returns: JSON object representation of the list of Reports
         :rtype: dict

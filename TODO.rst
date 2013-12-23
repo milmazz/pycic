@@ -1,6 +1,10 @@
 TODO
 ====
 
+General
++++++++
+ - Proxy support
+
 Create Reports
 ++++++++++++++
 
