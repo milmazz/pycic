@@ -24,7 +24,7 @@ class BaseMethod(object):
 
     def _get_method_url(self):
         """Return an URI for the method specified."""
-        formatter = "json" 
+        formatter = "json"
         if self.method:
             url = "%s/%d/%s/%s.%s" % (self.base_url, self.version,
                                       self.account, self.method,
