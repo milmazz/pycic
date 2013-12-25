@@ -10,4 +10,4 @@ def mockreturn(api_url, proxies):
 def test_report(monkeypatch):
     monkeypatch.setattr("requests.get", mockreturn)
     r = Category()
-    assert r.get() == u'{"private_gists": 419}'
+    assert r.get() == '{"private_gists": 419}'

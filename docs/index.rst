@@ -18,6 +18,13 @@ Feature support
  - Limits the number of reports to retrieve, also, you can filter for category or dates.
  - Creates new reports.
  - Supports for proxies. You can find more details in the :ref:`examples` section.
+ - Are you asking yourself if ``pycic`` works with Python 3?, *Yes*, the following is a list of Python platforms that are officially supported:
+
+   + Python 2.6
+   + Python 2.7
+   + Python 3.2
+   + Python 3.3
+   + PyPy
 
 API Documentation
 +++++++++++++++++

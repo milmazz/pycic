@@ -13,13 +13,13 @@ def mockreturn(api_url, params, proxies):
 def test_report(monkeypatch):
     monkeypatch.setattr("requests.get", mockreturn)
     r = Report()
-    assert r.get() == u'{"private_gists": 419}'
+    assert r.get() == '{"private_gists": 419}'
 
 
 def test_report_limit_filter(monkeypatch):
     monkeypatch.setattr("requests.get", mockreturn)
     r = Report()
-    assert r.get(limit=2) == u'{"private_gists": 419}'
+    assert r.get(limit=2) == '{"private_gists": 419}'
 
 
 def test_report_limit_filter_fail(monkeypatch):
@@ -33,7 +33,7 @@ def test_report_until_filter(monkeypatch):
     date = datetime(2013, 12, 23)
     monkeypatch.setattr("requests.get", mockreturn)
     r = Report()
-    assert r.get(until=date) == u'{"private_gists": 419}'
+    assert r.get(until=date) == '{"private_gists": 419}'
 
 
 def test_report_until_filter_fail(monkeypatch):
