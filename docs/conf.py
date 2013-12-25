@@ -20,7 +20,6 @@ import os
 # documentation root, use os.path.abspath to make it absolute, like shown here.
 sys.path.insert(0, os.path.abspath('..'))
 import pycic
-#from pycic import __version__
 
 # -- General configuration ------------------------------------------------
 
@@ -59,7 +58,11 @@ copyright = u'2013, Milton Mazzarri'
 # built documents.
 #
 # The short X.Y version.
-version = '0.1'  # Replace for __version__
+import ConfigParser as configparser
+config = configparser.ConfigParser()
+config.read(os.path.abspath(os.path.join('..', 'setup.cfg')))
+
+version = config.get("metadata", "version")
 # The full version, including alpha/beta/rc tags.
 release = version
 
