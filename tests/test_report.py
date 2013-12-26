@@ -1,43 +1,45 @@
+"""Tests for Report class."""
+
 import pytest
 from datetime import datetime
 
 from pycic.report import Report
-from .base import ResponseMock
+from .base import mockreturn
 
 
-def mockreturn(api_url, params, proxies):
-    r = ResponseMock()
-    return r
-
-
-def test_report(monkeypatch):
+@pytest.fixture(autouse=True)
+def no_requests(monkeypatch):
     monkeypatch.setattr("requests.get", mockreturn)
+    monkeypatch.setattr("requests.head", mockreturn)
+
+
+@pytest.fixture(scope="function", params=[{}, {"limit": 2},
+                                          {"until": datetime(2013, 12, 23)}])
+def get_success(request):
+    return request.param
+
+@pytest.fixture(scope="function", params=[{"limit": -1},
+                                          {"until": "2013-12-23"}])
+def get_fails(request):
+    return request.param
+
+def test_get_success(get_success):
     r = Report()
-    assert r.get() == '{"private_gists": 419}'
+    assert r.get(**get_success) == '{"private_gists": 419}'
 
-
-def test_report_limit_filter(monkeypatch):
-    monkeypatch.setattr("requests.get", mockreturn)
-    r = Report()
-    assert r.get(limit=2) == '{"private_gists": 419}'
-
-
-def test_report_limit_filter_fail(monkeypatch):
-    monkeypatch.setattr("requests.get", mockreturn)
-    r = Report()
-    with pytest.raises(TypeError):
-        r.get(limit=-1)
-
-
-def test_report_until_filter(monkeypatch):
-    date = datetime(2013, 12, 23)
-    monkeypatch.setattr("requests.get", mockreturn)
-    r = Report()
-    assert r.get(until=date) == '{"private_gists": 419}'
-
-
-def test_report_until_filter_fail(monkeypatch):
-    monkeypatch.setattr("requests.get", mockreturn)
+def test_get_fails(get_fails):
     r = Report()
     with pytest.raises(TypeError):
-        r.get(until="2013-12-23")
+        r.get(**get_fails)
+
+
+def test_save_fails():
+    r = Report()
+    with pytest.raises(NameError):
+        r.save()
+
+
+def test_save_category_type_error():
+    r = Report()
+    with pytest.raises(TypeError):
+        r.save(category=494, content="raise TypeError")

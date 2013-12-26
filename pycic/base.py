@@ -29,7 +29,7 @@ class BaseMethod(object):
             url = "%s/%d/%s/%s.%s" % (self.base_url, self.version,
                                       self.account, self.method,
                                       formatter)
-            request_url = requests.head(url, proxies=self.proxies)
+            request_url = requests.head(url, params=None, proxies=self.proxies)
             request_url.raise_for_status()
             return url
         else:
@@ -39,7 +39,7 @@ class BaseMethod(object):
         """Retrieve all the available entries for the method especified."""
         api_url = self._get_method_url()
 
-        r = requests.get(api_url, proxies=self.proxies)
+        r = requests.get(api_url, params=None, proxies=self.proxies)
 
         r.raise_for_status()
 

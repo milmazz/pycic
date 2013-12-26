@@ -75,8 +75,9 @@ class Report(BaseMethod):
 
         r = requests.get(api_url, params=payload, proxies=self.proxies)
 
-        if r.status_code == requests.codes.ok:
-            return r.json()
+        r.raise_for_status()
+
+        return r.json()
 
     def save(self, **kwargs):
         """Create report.
@@ -125,6 +126,7 @@ class Report(BaseMethod):
 
         if payload.get('video_url'):
             video_uri_response = requests.head(payload['video_url'],
+                                               params=None,
                                                proxies=self.proxies)
             video_uri_response.raise_for_status()
 
