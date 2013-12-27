@@ -2,6 +2,10 @@
 
 import requests
 from datetime import datetime
+try:
+    from urlparse import urlparse
+except ImportError:
+    from urllib.parse import urlparse
 
 from .base import BaseMethod
 from .category import Category
@@ -9,6 +13,8 @@ from .exceptions import InvalidCategory
 
 
 class Report(BaseMethod):
+    """ Retrieve and save Reports. """
+
     def __init__(self, base_url="http://api.cic.mx", version=0,
                  account="nl", proxies=None):
         BaseMethod.__init__(self, base_url, version, account, proxies)
@@ -123,6 +129,14 @@ class Report(BaseMethod):
                 raise InvalidCategory
         else:
             raise TypeError
+
+        if payload.get('return_path'):
+            url = urlparse(payload['return_path'])
+            is_valid_scheme = (url.scheme == "http" or url.scheme == "https" or
+                               url.scheme == "mailto")
+
+            if not is_valid_scheme:
+                raise ValueError
 
         if payload.get('video_url'):
             video_uri_response = requests.head(payload['video_url'],
