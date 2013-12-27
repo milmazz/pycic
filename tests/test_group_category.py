@@ -14,7 +14,15 @@ def test_class_get(monkeypatch, classarg):
     monkeypatch.setattr("requests.get", mockreturn)
     monkeypatch.setattr("requests.head", mockreturn)
     r = classarg()
-    assert r.get() == '{"private_gists": 419}'
+    assert r.get() ==  {
+                        'categories': [
+                            {
+                                'id': 407,
+                                'name': 'ACCIDENTE'
+                            }
+                        ]
+                    }
+
 
 def test_class_save(classarg):
     with pytest.raises(NotImplementedError):
