@@ -73,3 +73,11 @@ def test_get_field_from_categories_fails():
     r = Report()
     with pytest.raises(TypeError):
         r._get_field_from_categories()
+
+
+def test_invalid_return_path():
+    r = Report()
+    with pytest.raises(ValueError):
+        r.save(category="ACCIDENTE",
+               content="raise ValueError",
+               return_path="//developers.cic.mx/")
