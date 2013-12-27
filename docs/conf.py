@@ -58,7 +58,11 @@ copyright = u'2013, Milton Mazzarri'
 # built documents.
 #
 # The short X.Y version.
-import ConfigParser as configparser
+try:
+    import ConfigParser as configparser
+except ImportError:
+    import configparser
+
 config = configparser.ConfigParser()
 config.read(os.path.abspath(os.path.join('..', 'setup.cfg')))
 
