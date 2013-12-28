@@ -1,11 +1,19 @@
-"""Client API for CIC (Centro Integracion Ciudadana) in Mexico."""
+# -*- coding: utf-8 -*-
 
-import requests
+"""
+Report class definition.
+
+This module contains the Report class definition
+
+"""
+
 from datetime import datetime
 try:
     from urlparse import urlparse
 except ImportError:
     from urllib.parse import urlparse
+
+import requests
 
 from .base import BaseMethod
 from .category import Category
@@ -13,23 +21,34 @@ from .exceptions import InvalidCategory
 
 
 class Report(BaseMethod):
-    """ Retrieve and save Reports. """
+    """Retrieve and save Reports."""
 
     def __init__(self, base_url="http://api.cic.mx", version=0,
                  account="nl", proxies=None):
         BaseMethod.__init__(self, base_url, version, account, proxies)
+        self.category = None
+        self.content = None
+        self.first_name = None
+        self.last_name = None
+        self.lat = None
+        self.limit = None
+        self.lng = None
         self.method = "reports"
+        self.return_path = None
+        self.title = None
+        self.until = None
+        self.video_url = None
 
     def _get_field_from_categories(self, field=None):
         """Return specific field as a list for all categories.
 
         :param field: Some attribute for each category
         :type field: str
-        :raises: TypeError
+        :raises: KeyError
 
         """
-        categories_filtered = []
         categories = Category(self.base_url, self.version, self.account)
+        categories_filtered = []
 
         all_categories = categories.get()
 
@@ -38,11 +57,11 @@ class Report(BaseMethod):
             if category_field:
                 categories_filtered.append(category_field)
             else:
-                raise TypeError
+                raise KeyError
 
         return categories_filtered
 
-    def get(self, limit=None, for_category=None, until=None):
+    def get(self, **kwargs):
         """Retrieve reports, by default we get all the reports.
 
         :param limit: The total reports to get
@@ -53,37 +72,72 @@ class Report(BaseMethod):
         :type until: datetime or None
         :returns: JSON object representation of the list of Reports
         :rtype: dict
-        :raises: TypeError, InvalidCategory
+        :raises: TypeError, ValueError, InvalidCategory
 
         """
         api_url = self._get_method_url()
+        filter_category_by = "id"
+        self.category = kwargs.get('for_category')
+        self.limit = kwargs.get('limit')
+        self.until = kwargs.get('until')
 
-        date_filter = None
+        # Validation process for fields
+        if self.category:
+            self.raise_for_category(filter_category_by)
 
-        if limit and (not isinstance(limit, int) or limit < 0):
-            raise TypeError
+        self.raise_for_limit()
+        self.raise_for_until()
 
-        if for_category:
-            field = "id"
-            categories_id_field = self._get_field_from_categories(field)
+        payload = {"for_category": self.category,
+                   "limit": self.limit,
+                   "until": self.until
+                   }
 
-            if not for_category in categories_id_field:
-                raise InvalidCategory
+        response = requests.get(api_url, params=payload, proxies=self.proxies)
 
-        if until:
-            if not isinstance(until, datetime):
+        response.raise_for_status()
+
+        return response.json()
+
+    def raise_for_category(self, field):
+        """Raise InvalidCategory if one ocurred for category."""
+        categories_field = self._get_field_from_categories(field)
+
+        if not self.category in categories_field:
+            raise InvalidCategory
+
+    def raise_for_field(self, field, type_of_field):
+        """Raise TypeError if occurred for field."""
+        if field:
+            if not isinstance(field, type_of_field):
+                raise TypeError
+
+    def raise_for_limit(self):
+        """Raise ValueError or TypeError if one occurred for limit filter."""
+        if self.limit:
+            if isinstance(self.limit, int):
+                if self.limit < 0:
+                    raise ValueError
+            else:
+                raise TypeError
+
+    def raise_for_return_path(self):
+        """Raise ValueError if occurred for return_path field."""
+        if self.return_path:
+            url = urlparse(self.return_path)
+            is_valid_scheme = (url.scheme == "http" or url.scheme == "https" or
+                               url.scheme == "mailto")
+
+            if not is_valid_scheme:
+                raise ValueError
+
+    def raise_for_until(self):
+        """Raise TypeError if ocurred for until filter."""
+        if self.until:
+            if not isinstance(self.until, datetime):
                 raise TypeError
             else:
-                date_filter = until.date().isoformat()
-
-        payload = {"limit": limit, "for_category": for_category,
-                   "until": date_filter}
-
-        r = requests.get(api_url, params=payload, proxies=self.proxies)
-
-        r.raise_for_status()
-
-        return r.json()
+                self.until = self.until.date().isoformat()
 
     def save(self, **kwargs):
         """Create report.
@@ -99,9 +153,9 @@ class Report(BaseMethod):
         :param return_path: Report Contact in URI format
                             Valid schemes supported: HTTP HTTPS MAILTO
         :type return_path: str
-        :param lat: The report latitude in WSG84 decimal
+        :param lat: The report latitude in WGS84 decimal
         :type lat: float
-        :param lng: The report longitude in WSG84 decimal
+        :param lng: The report longitude in WGS84 decimal
         :type lng: float
         :param video_url: Asset for the current report, the field accepts
                           a single string with an URL for a valid asset.
@@ -114,38 +168,54 @@ class Report(BaseMethod):
         """
 
         api_url = self._get_method_url()
-        payload = kwargs
+        filter_category_by = "name"
+        self.category = kwargs.get('category')
+        self.content = kwargs.get('content')
+        self.first_name = kwargs.get('first_name')
+        self.first_name = kwargs.get('last_name')
+        self.return_path = kwargs.get('return_path')
+        self.title = kwargs.get('title')
+        self.video_url = kwargs.get('video_url')
 
-        if not payload.get('category') or not payload.get('content'):
+        # Category and Content are required fields
+        if not self.category or not self.content:
             raise NameError
 
-        # Validation process for category
-        if isinstance(payload['category'], str):
-            payload['category'] = payload['category'].upper()
-            field = "name"
-            categories_name_field = self._get_field_from_categories(field)
+        # Validation process for content, title, first_name,
+        # last_name and category fields
+        fields = [self.content, self.title, self.first_name,
+                  self.last_name, self.category]
+        for field in fields:
+            self.raise_for_field(field, str)
 
-            if not payload['category'] in categories_name_field:
-                raise InvalidCategory
-        else:
-            raise TypeError
+        # Category name must be in uppercase
+        self.category = self.category.upper()
+        self.raise_for_category(filter_category_by)
 
-        if payload.get('return_path'):
-            url = urlparse(payload['return_path'])
-            is_valid_scheme = (url.scheme == "http" or url.scheme == "https" or
-                               url.scheme == "mailto")
+        # Validation process for return_path field
+        self.raise_for_return_path()
 
-            if not is_valid_scheme:
-                raise ValueError
-
-        if payload.get('video_url'):
-            video_uri_response = requests.head(payload['video_url'],
+        # Validation process for video_url field
+        if self.video_url:
+            video_uri_response = requests.head(self.video_url,
                                                params=None,
                                                proxies=self.proxies)
             video_uri_response.raise_for_status()
 
-        r = requests.post(api_url, params=payload, proxies=self.proxies)
+        payload = {
+            "category": self.category,
+            "content": self.content,
+            "first_name": self.first_name,
+            "last_name": self.last_name,
+            "lat": self.lat,
+            "lng": self.lng,
+            "return_path": self.return_path,
+            "title": self.title,
+            "video_url": self.video_url
+        }
 
-        r.raise_for_status()
+        response = requests.post(api_url, params=payload, proxies=self.proxies)
 
-        return r.json()
+        response.raise_for_status()
+
+        return response.json()

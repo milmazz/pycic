@@ -1,3 +1,12 @@
+# -*- coding: utf-8 -*-
+
+"""
+Group class definition.
+
+This module contains the Group class definition
+
+"""
+
 from .base import BaseMethod
 
 

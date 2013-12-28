@@ -1,3 +1,12 @@
+# -*- coding: utf-8 -*-
+
+"""
+Base method class definition.
+
+This module implements the Base Method for new request to the CIC's API
+
+"""
+
 import requests
 
 
@@ -7,20 +16,21 @@ class BaseMethod(object):
     def __init__(self, base_url=None, version=None, account=None,
                  proxies=None):
         """
-        :param base_url: Base URL of the CIC API
-        :type base_url: str or None
-        :param version: Version of this API
-        :type version: int or None
         :param account: Jurisdiction (possible values until now: nl and sal)
         :type account: str or None
+        :param base_url: Base URL of the CIC API
+        :type base_url: str or None
         :param proxies: Dictionary that contains http/https proxies
         :type proxies: dict or None
+        :param version: Version of this API
+        :type version: int or None
+
         """
-        self.base_url = base_url
-        self.version = version
         self.account = account
-        self.proxies = proxies
+        self.base_url = base_url
         self.method = None
+        self.proxies = proxies
+        self.version = version
 
     def _get_method_url(self):
         """Return an URI for the method specified."""
@@ -35,15 +45,15 @@ class BaseMethod(object):
         else:
             raise TypeError
 
-    def get(self):
+    def get(self, **kwargs):
         """Retrieve all the available entries for the method especified."""
         api_url = self._get_method_url()
 
-        r = requests.get(api_url, params=None, proxies=self.proxies)
+        response = requests.get(api_url, params=None, proxies=self.proxies)
 
-        r.raise_for_status()
+        response.raise_for_status()
 
-        return r.json()
+        return response.json()
 
     def save(self):
         """Save reports, groups or categories via CIC's API"""

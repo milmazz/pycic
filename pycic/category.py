@@ -1,3 +1,12 @@
+# -*- coding: utf-8 -*-
+
+"""
+Category class definition.
+
+This module contains the Category class definition
+
+"""
+
 from .base import BaseMethod
 
 
