@@ -112,6 +112,14 @@ class Report(BaseMethod):
             if not isinstance(field, type_of_field):
                 raise TypeError
 
+    def raise_for_lat_or_lng(self, field, limits):
+        """Raise ValueError if one ocurred for latitude or longitude fields."""
+        if isinstance(field, (int, float)):
+            if field < limits.get('min') or field > limits.get('max'):
+                raise ValueError
+        else:
+            raise TypeError
+
     def raise_for_limit(self):
         """Raise ValueError or TypeError if one occurred for limit filter."""
         if self.limit:
@@ -173,6 +181,8 @@ class Report(BaseMethod):
         self.content = kwargs.get('content')
         self.first_name = kwargs.get('first_name')
         self.first_name = kwargs.get('last_name')
+        self.lat = kwargs.get('lat')
+        self.lng = kwargs.get('lng')
         self.return_path = kwargs.get('return_path')
         self.title = kwargs.get('title')
         self.video_url = kwargs.get('video_url')
@@ -201,6 +211,13 @@ class Report(BaseMethod):
                                                params=None,
                                                proxies=self.proxies)
             video_uri_response.raise_for_status()
+
+        # Validation process for latitude or longitude fields
+        if self.lat:
+            self.raise_for_lat_or_lng(self.lat, {"min": -90, "max": 90})
+
+        if self.lng:
+            self.raise_for_lat_or_lng(self.lng, {"min": -180, "max": 180})
 
         payload = {
             "category": self.category,
