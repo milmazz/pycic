@@ -4,8 +4,8 @@ pycic: Python client for CIC_
 .. image:: https://travis-ci.org/milmazz/pycic.png?branch=master
 	:target: https://travis-ci.org/milmazz/pycic
 
- .. image:: https://coveralls.io/repos/milmazz/pycic/badge.png?branch=master
-    :target: https://coveralls.io/r/milmazz/pycic?branch=master
+.. image:: https://coveralls.io/repos/milmazz/pycic/badge.png?branch=master
+	:target: https://coveralls.io/r/milmazz/pycic?branch=master
 
 ``pycic`` is an MIT Licensed client, written in Python, that lets you interact with the CIC_ (Centro de Integracion Ciudadana) API. Hope that you enjoy it.
 
