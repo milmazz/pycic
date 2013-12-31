@@ -1,2 +1,3 @@
 pytest>=2.5.0
 python-coveralls
+pytest-cov
