@@ -1,3 +1,7 @@
 pytest>=2.5.0
-python-coveralls
 pytest-cov
+python-coveralls
+sphinx
+sphinx_rtd_theme
+flake8
+tox
