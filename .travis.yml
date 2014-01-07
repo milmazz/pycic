@@ -9,7 +9,7 @@ env:
     - TOX_ENV=pep8
     - TOX_ENV=docs
 install:
-    - pip install tox --use-mirrors
+    - pip install tox python-coveralls d2to1 --use-mirrors
 script:
     - tox -e $TOX_ENV
 after_success:
