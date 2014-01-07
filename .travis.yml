@@ -1,7 +1,3 @@
-cache:
-    directories:
-        - $HOME/.pip-cache/
-
 language: python
 python: 2.7
 env:
@@ -14,6 +10,9 @@ env:
     - TOX_ENV=docs
 install:
     - pip install tox python-coveralls d2to1 --use-mirrors --download-cache $HOME/.pip-cache
+cache:
+    directories:
+        - $HOME/.pip-cache/
 script:
     - tox -e $TOX_ENV
 after_success:
